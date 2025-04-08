@@ -50,7 +50,11 @@ Incoming data can be malformed or crafted to cause unintended behavior when it i
 
 Depending on how input is parsed, it is possible for unvalidated input to contain command injections, or other harmful actions.
 ###### Example of Issue (Optional)
-*TBD*
+
+Un formulario de contacto permite enviar datos con `script` embebido, como:
+
+```html
+<input name="email" value="<script>alert('XSS')</script>">
 
 ###### How to Fix?
 
