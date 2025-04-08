@@ -1,4 +1,4 @@
-# API Best Practices Guidelines [Coding Practice] 
+# API Best Practices Guidelines [Coding Practice]
 <font size="-1">_Author: Frank Arana - Dec. 2018_</font>
 
 ## Overview
@@ -10,111 +10,120 @@ This document covers general security guidelines for API endpoints within Unity.
 - [Replay attacks](#replay-attacks)
 - [General security practices relevant to, but not specific to APIs](#general)
 
+---
+
 ### Recommendations
+
 #### Access Controls
-###### Description
 
+###### Description  
 API endpoints should follow the principle of least privilege. Services with protected information should serve to the smallest group possible.
-###### Why We Care
 
+###### Why We Care  
 APIs with misconfigured access controls can lead to unintentional information leaks, or unauthorized and malicious state-changing actions on sensitive data.
-###### Example of Issue (Optional)
 
-A POST that allows the user to modify information on an account without checking if the user owns the account being modified.
+###### Example of Issue (Optional)  
+- A POST that allows the user to modify information on an account without checking if the user owns the account being modified.  
+- A GET request that returns sensitive informative information without authentication.
 
-A GET request that returns sensitive informative information without authentication.
+###### How to Fix?  
+- Determine which API actions should be considered sensitive or public.  
+- For internal APIs: restrict to internal networks and use strong authentication (e.g., MFA).  
+- For public APIs with sensitive data: require authentication, use revocable and renewable API keys.  
+- For public APIs with public info: avoid state-changing actions, apply rate limiting.
 
-###### How to Fix?
-
-Determine which API actions should be considered sensitive or public.
-
-For Internal (to Unity) APIs: Limit network access as much as possible. Ideally, these endpoints should be restricted to a closed network, and require authentication stronger than a singular API key. For example, multi-factor authentication.
-
-For Public APIs with sensitive information: Require authentication before performing any action being requested. API keys should be both revocable and renewable.
-
-For Public APIs providing public information: Ensure no state changing actions are being performed through a public API without authentication. Consider rate limiting to prevent a single host making too many requests in a small amount of time.
-###### Risk Rating
-
+###### Risk Rating  
 Incorrect access controls can range from High to Low Severity.
-###### References (Optional)
 
+###### References (Optional)  
 - https://www.owasp.org/index.php/REST_Security_Cheat_Sheet
 
 ---
 
 #### Input Validation
-###### Description
 
+###### Description  
 Incoming data can be malformed or crafted to cause unintended behavior when it is parsed.
-###### Why We Care
 
-Depending on how input is parsed, it is possible for unvalidated input to contain command injections, or other harmful actions.
-###### Example of Issue (Optional)
+###### Why We Care  
+Unvalidated input can include command injections, XSS attacks, or other harmful actions.
 
+###### Example of Issue (Optional)  
 Un formulario de contacto permite enviar datos con `script` embebido, como:
 
 ```html
 <input name="email" value="<script>alert('XSS')</script>">
+```
 
-###### How to Fix?
+###### How to Fix?  
+- Type checking  
+- Length and size limits  
+- Whitelist accepted content-types  
+- Restrict HTTP methods  
+- Keep third-party parsers updated and review changes to internal parsers
 
-Type checking - Ensure input is of the expected data type, reject anything else.
-
-Length and size checking - Input should be within an expected length or size. Reject anything larger or smaller than expected.
-
-Whitelist accepted content-types
-
-Restrict http methods
-
-Parsing - Third party parsers should be kept up to date, changes to internal parsers should be carefully reviewed.
-###### Risk Rating
-
-Input Validation issues could range from Low to High depending on how the error can be leveraged.
+###### Risk Rating  
+Can range from Low to High depending on severity and usage.
 
 ---
+
 ### Request Integrity
-###### Description
 
+###### Description  
 It is possible that a request could be modified in-transit between the original requestor and the API endpoint.
-###### Why We Care
 
-Modified requests may cause state changing actions to the original requestor’s data, or cause incorrect, modified, or unexpected data to be served.
-###### Example of Issue (Optional)
+###### Why We Care  
+Modified requests may alter data, result in incorrect responses, or perform unintended actions.
+
+###### Example of Issue (Optional)  
+*TBD*
+
+###### How to Fix?  
+- Sign requests with HMACs  
+- Include timestamps  
+- Reject outdated requests  
+- Use HTTPS to avoid data being tampered with
+
+###### Risk Rating  
+Varies depending on what data/actions the request contains.
 
 ---
+
 ### Replay Attacks
-An attacker sends a previous, genuine request to cause an action to happen again at a later time.
 
-Modified requests in-transit: An attacker modifies data in the genuine request as it is sent.
-###### How to Fix?
+###### Description  
+An attacker sends a previously valid request to trigger the same action again.
 
-Generate signatures or HMACs (Hashed Message Authentication Codes) for each request containing sensitive data or actions. Check the signature of the request to determine if it is genuine. Sign requests that include timestamps, and deny all requests that are relatively too old.
-###### Risk Rating
+###### How to Fix?  
+- Use unique request identifiers  
+- Include timestamps in each request  
+- Deny requests that are too old  
+- Sign the request to ensure authenticity
 
-Depending on what actions the request can take, severity could range from High to Low.
-###### References (Optional)
+###### Risk Rating  
+Severity depends on the impact of repeated requests.
 
+###### References (Optional)  
 - https://docs.aws.amazon.com/general/latest/gr/signing_aws_api_requests.html#why-requests-are-signed
 
 ---
+
 ### General
-###### Description
-Common security practices relevant, but not exclusive to APIs
-###### Why We Care
 
-Even by following best security practices for APIs, it is possible to miss other malicious activity.
-###### Example of Issue (Optional)
+###### Description  
+Common security practices relevant to APIs and web services in general.
 
-No logging or monitoring missing security events
+###### Why We Care  
+Even with proper API rules, poor overall security may leave vulnerabilities.
 
-Returning stack traces or other descriptive information of the service backend
-###### How to Fix?
+###### Example of Issue (Optional)  
+- Lack of logging and monitoring  
+- Returning full stack traces or sensitive debug data in errors
 
-Log and monitor API activity. Detecting anomalies can assist in finding malicious activity that isn’t apparent anywhere else.
+###### How to Fix?  
+- Log and monitor API activity to detect anomalies  
+- Disable or limit CORS  
+- Use vague error messages—avoid exposing internal server or debug info
 
-Disable CORS (Cross-Origin Resource Sharing) if not needed, or scope it down as small as possible to prevent forged requests or data leakage.
-
-Return vague error responses. Put as little information as possible when returning an error to the user. Do not return any information about the server environment or debug information like stack traces.
-###### Risk Rating
-
-Ranging from Low to High depending on context.
+###### Risk Rating  
+Ranging from Low to High depending on the situation.
