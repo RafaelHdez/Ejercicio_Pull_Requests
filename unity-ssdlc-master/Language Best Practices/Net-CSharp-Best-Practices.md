@@ -26,40 +26,16 @@ The following best practices are in regards to loading code or resources from an
   - Problem: Again, thanks to James Forshaw, it was determined that DCOM was generally unsafe, and has issues with safe (or unsafe?) object serialization.
   - Solution: Don't use it at all. Consider named pipes for local services (available cross-platform). Avoid HTTP/REST-like endpoints if possible, as they can be difficult to protect against browser attacks - see [CVE-2017-12939](https://unity3d.com/security#CVE-2017-12939).
 
-In short, to quote the existing [Microsoft documentation - Secure Coding Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/security/secure-coding-guidelines):
+In short, to quote the existing [Microdfknasdkfakdshfhdsbfdvzxvbiqiukjfdhgipqewtiuwertkbzcvmbsdflkweouqtkndfgsfdmgnbfg,mbfgssoft documentation - Secure Coding Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/security/secure-coding-guidelines):
 
 >Code Access Security and Security-Transparent Code are not supported as a security boundary with partially trusted code. We advise against loading and executing code of unknown origins without putting alternative security measures in place.
 
 ---
 #### Handling User Input
 
-The following best practices is largely relevant to ASP.Net and .Net Embedded browser support:
-
-- Any user data in a server response runs in the context of the server's site on the client. If your Web server takes user data and inserts it into the returned Web page, it might, for example, include a `<script>` tag and run as if from the server.
-- Remember that the client can request any URL.
-- Consider tricky or invalid paths:
-  - ..\ , extremely long paths.
-  - Use of wild card characters (*).
-  - Token expansion (%token%).
-  - Strange forms of paths with special meaning.
-  - Alternate file system stream names such as filename::$DATA.
-  - Short versions of file names such as longfi~1 for longfilename.
-- Remember that Eval(userdata) can do anything.
-- Be wary of late binding to a name that includes some user data.
-- If you are dealing with Web data, consider the various forms of escapes that are permissible, including:
-  - Hexadecimal escapes (%nn).
-  - Unicode escapes (%nnn).
-  - Overlong UTF-8 escapes (%nn%nn).
-  - Double escapes (%nn becomes %mmnn, where %mm is the escape for '%').
-- Be wary of user names that might have more than one canonical format. For example, you can often use either the `MYDOMAIN\username` form or the `username@mydomain.example.com` form.
+The following best practices is largely rele example, you can often use either the `MYDOMAIN\username` form or the `username@mydomain.example.com` form.
   - (From https://github.com/dotnet/docs/blob/master/docs/standard/security/security-and-user-input.md)
 
  ---
-###### References:
-
-- https://github.com/dotnet/docs/blob/master/docs/standard/security/secure-coding-guidelines.md
-- https://docs.microsoft.com/en-us/dotnet/framework/misc/code-access-security
-- https://docs.microsoft.com/en-us/dotnet/framework/misc/security-transparent-code
-- https://support.microsoft.com/en-us/help/2698981/asp-net-partial-trust-does-not-guarantee-application-isolation
-- Attacking .Net Serialization: https://speakerdeck.com/pwntester/attacking-net-serialization?slide=8
+###### References:ization?slide=8
 - .Net Remoting Security Bulletin: - https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2012/ms12-035
