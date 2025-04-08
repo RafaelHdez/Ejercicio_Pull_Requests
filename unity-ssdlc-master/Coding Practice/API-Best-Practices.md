@@ -95,10 +95,7 @@ Varies depending on what data/actions the request contains.
 An attacker sends a previously valid request to trigger the same action again.
 
 ###### How to Fix?  
-- Use unique request identifiers  
-- Include timestamps in each request  
-- Deny requests that are too old  
-- Sign the request to ensure authenticity
+ Arreglandolo :v
 
 ###### Risk Rating  
 Severity depends on the impact of repeated requests.
