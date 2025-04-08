@@ -65,7 +65,10 @@ Un formulario de contacto permite enviar datos con `script` embebido, como:
 ###### Risk Rating  
 Can range from Low to High depending on severity and usage.
 
----
+```markdown
+###### References (Optional)
+
+- https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html
 
 ### Request Integrity
 
@@ -95,7 +98,10 @@ Varies depending on what data/actions the request contains.
 An attacker sends a previously valid request to trigger the same action again.
 
 ###### How to Fix?  
- Arreglandolo :v
+- Use unique request identifiers  
+- Include timestamps in each request  
+- Deny requests that are too old  
+- Sign the request to ensure authenticity
 
 ###### Risk Rating  
 Severity depends on the impact of repeated requests.
